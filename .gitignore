@@ -39,3 +39,27 @@
 
 # debug information files
 *.dwo
+
+#Build folder
+/build/
+
+#Cmake-specific files and folders
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+CTestTestfile.cmake
+
+# VSCode
+.vscode/
+
+# CLion / IntelliJ IDEA
+.idea/
+
+# MacOS
+.DS_Store
+
+# Vim swap / temp
+*~
+*.swp

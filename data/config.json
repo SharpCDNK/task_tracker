@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "description": "Special chars: \\\" \n and others: \n\\\\",
+    "status": "",
+    "createdAt": "01.02.03",
+    "updatedAt": "01.02.03"
+  }
+]
