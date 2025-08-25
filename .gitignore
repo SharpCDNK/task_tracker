@@ -63,3 +63,9 @@ CTestTestfile.cmake
 # Vim swap / temp
 *~
 *.swp
+# ==== Vim swap / temp files ====
+*~
+*.swp
+*.swo
+*.swn
+*.swm
