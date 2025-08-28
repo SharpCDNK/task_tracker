@@ -8,17 +8,19 @@
 std::string readFileToString(const std::string& file_name){
     std::ifstream file(file_name);
     if(!file.is_open()){
-        throw std::runtime_error("Couldn't open the file " + file_name);
+        std::ofstream create_file(file_name);
+        if(!create_file.is_open()){
+            throw std::runtime_error("Couldn't create the file " + file_name);
+        }
+        create_file << "[\n]";
+        create_file.close();
+        return "";
     }
 
     std::stringstream ss;
     ss << file.rdbuf();
 
     std::string content = ss.str();
-    if(content.front() != '[' && content.back() != ']'){
-        throw std::runtime_error("Invalid structure of " + file_name);
-    }
-
     return content;
 }
 
@@ -37,7 +39,7 @@ void writeStringToFile(const std::string& file_name, const std::string& content)
 
 
 
-std::string jsonEscape(const std::string& s) {
+static std::string jsonEscape(const std::string& s) {
     std::string out;
     for(const char& c: s){
         switch(c){
@@ -53,7 +55,7 @@ std::string jsonEscape(const std::string& s) {
 }
 
 
-std::string jsonUnescape(const std::string& s){
+static std::string jsonUnescape(const std::string& s){
     std::string out;
 
     for(size_t i = 0; i < s.size(); i++){
@@ -78,7 +80,7 @@ std::string jsonUnescape(const std::string& s){
 }
 
 
-std::string toJson(const Task& t){
+static std::string toJson(const Task& t){
     std::string s = "  {\n";
     s += "    \"id\": " + std::to_string(t.id) + ",\n";
     s += "    \"description\": \"" + jsonEscape(t.description) + "\",\n";
@@ -91,8 +93,8 @@ std::string toJson(const Task& t){
 }
 
 
-std::string extractRaw (const std::string& json, const std::string& key){
-    std::string needle = "\"" + key + "\"";
+static std::string extractRaw (const std::string& json, const std::string& key){
+    std::string needle = key;
 
     size_t pos = json.find(needle);
     if(pos == std::string::npos)    return "";
@@ -129,8 +131,7 @@ std::string extractRaw (const std::string& json, const std::string& key){
 
             i++;
         }
-
-        return json.substr(start, i - start);
+        return json.substr(start + 1, (i - start)-2);
     }
 
     size_t start = i;
@@ -143,7 +144,7 @@ std::string extractRaw (const std::string& json, const std::string& key){
 }
 
 
-Task parseJsonObject(const std::string& json){
+static Task parseJsonObject(const std::string& json){
     Task object;
     std::string idStr = extractRaw(json,"id");
 
@@ -192,19 +193,15 @@ std::vector<Task> parseJsonToVector(const std::string& file_name){
 std::string getContentFromVector(const std::vector<Task>& tasks){
     std::string content = "[\n";
 
-    for(auto& obj: tasks){
-        content += toJson(obj) + '\n';
+    for(size_t i = 0; i < tasks.size(); i++){
+        content += toJson(tasks[i]);
+        if(i != tasks.size() - 1){
+            content += ',';
+        }
+        content += '\n';
     }
 
     content += ']';
 
     return content;
 }
-
-#ifdef TEST
-int main(){
-
-
-
-}
-#endif
