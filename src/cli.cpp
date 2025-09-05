@@ -185,13 +185,3 @@ std::optional<CommandInstance> parseArguments(int argc, char* argv[]){
 
     return CommandInstance{command, std::move(parsed), spec};
 }
-
-
-
-#ifdef TEST
-int main(){
-
-    printAllCommandsUsage(std::cout);
-
-}
-#endif
