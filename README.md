@@ -14,12 +14,13 @@ cd task_tracker
 Run the following command to build and run the project:
 
 ```bash
-mkdir build
+mkdir -p build
 cd build
-cmake ..
-# Build the project
-make
 
+cmake -DCMAKE_TOOLCHAIN_FILE=../gcc13.cmake \
+      -DCMAKE_BUILD_TYPE=Release \
+      -S .. -B .
+cmake --build .
 
 # To add a task
 ./task-cli add "Buy groceries"
